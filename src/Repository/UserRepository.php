@@ -35,8 +35,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findAllData(){
         return $this->createQueryBuilder('u')
+            ->select('u','c','p')
+            ->leftJoin('u.commitment', 'c')
+            ->leftJoin('u.payment','p')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllDataForActiveCommitment(){
+        return $this->createQueryBuilder('u')
             ->select('u','c')
             ->leftJoin('u.commitment', 'c')
+            ->where('u.active = true')
             ->getQuery()
             ->getResult();
     }

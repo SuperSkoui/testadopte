@@ -53,6 +53,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $card_number = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $lasPaymentDate = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Payment $payment = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -196,6 +202,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCardNumber(?string $card_number): static
     {
         $this->card_number = $card_number;
+
+        return $this;
+    }
+
+    public function getLasPaymentDate(): ?\DateTimeInterface
+    {
+        return $this->lasPaymentDate;
+    }
+
+    public function setLasPaymentDate(?\DateTimeInterface $lasPaymentDate): static
+    {
+        $this->lasPaymentDate = $lasPaymentDate;
+
+        return $this;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($payment === null && $this->payment !== null) {
+            $this->payment->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($payment !== null && $payment->getUser() !== $this) {
+            $payment->setUser($this);
+        }
+
+        $this->payment = $payment;
 
         return $this;
     }

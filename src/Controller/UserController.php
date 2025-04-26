@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Commitment;
+use App\Entity\Payment;
 use App\Entity\User;
 use App\Form\CommitmentType;
 use App\Form\UserType;
@@ -91,14 +92,21 @@ final class UserController extends AbstractController
     #[Route('{id}/add/{idCommitment}', name: 'user.add.commitment', methods: ['GET', 'POST'])]
     public function addCommitment(Request $request, EntityManagerInterface $entityManager, User $user,int $idCommitment, CommitmentRepository $commitmentRepository ): Response
     {
-
-        $user->setCommitment($commitmentRepository->find($idCommitment));
+        $commitment = $commitmentRepository->find($idCommitment);
+        $user->setCommitment($commitment);
         $user->setCommitmentActive(true);
         $user->setCommitmentStart(new \DateTimeImmutable());
+        $user->setLasPaymentDate(new \DateTimeImmutable());
+        $payment=new Payment();
+        $payment->setUser($user);
+        $payment->setAmount($commitment->getCost());
+        $payment->setDate(new \DateTimeImmutable());
+        $entityManager->persist($user);
+        $entityManager->persist($payment);
         $entityManager->persist($user);
         $entityManager->flush();
         /*
-         * call api pour 1er reglement
+         * TODO:call api pour 1er reglement
          * */
 
         return $this->render('commitment/index.html.twig',[

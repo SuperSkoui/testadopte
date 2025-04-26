@@ -30,6 +30,9 @@ class Commitment
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'commitment')]
     private Collection $users;
 
+    #[ORM\Column]
+    private ?int $cost = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -102,6 +105,18 @@ class Commitment
                 $user->setCommitment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCost(): ?int
+    {
+        return $this->cost;
+    }
+
+    public function setCost(int $cost): static
+    {
+        $this->cost = $cost;
 
         return $this;
     }
