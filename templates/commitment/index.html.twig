@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commitment index{% endblock %}
+
+{% block body %}
+    <h1>Commitment index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Duration</th>
+                <th>TimeToPay</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for commitment in commitments %}
+            <tr>
+                <td>{{ commitment.id }}</td>
+                <td>{{ commitment.name }}</td>
+                <td>{{ commitment.duration }}</td>
+                <td>{{ commitment.timeToPay }}</td>
+                <td>
+                    <a href="{{ path('commitment.show', {'id': commitment.id}) }}">show</a>
+                    {% if  is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('commitment.edit', {'id': commitment.id}) }}">edit</a>
+                        {% else %}
+                            <a href="{{ path('user.add.commitment', {'id':app.user.id,'idCommitment': commitment.id}) }}">souscrire</a>
+                    {% endif %}
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if  is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('commitment.new') }}">Create new</a>
+    {% endif %}
+{% endblock %}

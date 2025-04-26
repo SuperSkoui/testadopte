@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Commitment{% endblock %}
+
+{% block body %}
+    <h1>Edit Commitment</h1>
+
+    {{ include('commitment/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('commitment.index') }}">back to list</a>
+
+    {{ include('commitment/_delete_form.html.twig') }}
+{% endblock %}

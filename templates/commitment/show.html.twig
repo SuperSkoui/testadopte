@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commitment{% endblock %}
+
+{% block body %}
+    <h1>Commitment</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ commitment.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ commitment.name }}</td>
+            </tr>
+            <tr>
+                <th>Duration</th>
+                <td>{{ commitment.duration }}</td>
+            </tr>
+            <tr>
+                <th>TimeToPay</th>
+                <td>{{ commitment.timeToPay }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('commitment.index') }}">back to list</a>
+    {% if  is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('commitment.edit', {'id': commitment.id}) }}">edit</a>
+        {{ include('commitment/_delete_form.html.twig') }}
+
+    {%  endif %}
+
+
+{% endblock %}
